@@ -4,4 +4,4 @@ jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Commit messages ${{ github.event }} ."
+      - run: echo "Commit messages ${{ github.event.commits[0].message }} ."
