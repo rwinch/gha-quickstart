@@ -4,4 +4,4 @@ jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Commit messages ${{ join(github.event.commits*.message, ', ') }} ."
+      - run: echo "Commit messages ${{ github.event.commits*.message }} ."
