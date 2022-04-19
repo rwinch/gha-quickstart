@@ -4,4 +4,4 @@ jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Commit messages ${{ join(github.event.commits.*.message, ', ') }}. Skip ci? ${{ contains(github.event.commits.*.message, 'Skip CI') }}"
+      - run: echo "Commit messages ${{ join(github.event.commits.*.message, ', ') }}. Skip ci? ${{ contains(join(github.event.commits.*.message, ' '), 'Skip CI') }}"
