@@ -9,24 +9,13 @@ env:
   RUN_JOBS: ${{ github.repository == 'rwinch/gha-quickstart' }}
 
 jobs:
-  prerequisites:
-    name: Pre-requisites for building
+  release-next-version:
+    name: Initiate Release If Scheduled
     runs-on: ubuntu-latest
-    outputs:
-      runjobs: ${{ steps.continue.outputs.runjobs }}
-    steps:
-      - id: continue
-        name: Determine if should continue
-        if: env.RUN_JOBS == 'true'
-        run: echo "::set-output name=runjobs::true"
-  check_release_due:
-    name: Check if the release is due today
-    needs: [prerequisites]
-    runs-on: ubuntu-latest
-    if: needs.prerequisites.outputs.runjobs
     steps:
       - id: check-release-due
         name: Check Release Due
+        if: env.RUN_JOBS == 'true'
         run: |
           mkdir -p build/github/milestones
           echo "true" > build/github/milestones/is-due-today
@@ -34,4 +23,14 @@ jobs:
       - id: check-open-issues
         name: Check Open Issues
         if: steps.check-release-due.outputs.is_due_today
-        run: echo "Continuing"
+        run: |
+          mkdir -p build/github/milestones
+          echo "false" > build/github/milestones/is-open-issues
+          echo "::set-output name=is_open_issues::$(cat build/github/milestones/is-open-issues)"
+      - id: release
+        name: Initiate the Release
+        run: echo "Releasing"
+      - id: notify-result
+        name: Notify the Result
+        if: failure()
+        run: echo "Failed"
