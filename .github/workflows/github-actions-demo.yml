@@ -1,7 +1,36 @@
-name: GitHub Actions Demo
-on: [push]
+name: Release Next Version
+
+on:
+  schedule:
+    - cron: '0 17 * * MON' # Every Monday at 5pm UTC
+  workflow_dispatch: # Manual trigger
+
+env:
+  RUN_JOBS: ${{ github.repository == 'rwinch/gha-quickstart' }}
+
 jobs:
-  Explore-GitHub-Actions:
+  prerequisites:
+    name: Pre-requisites for building
     runs-on: ubuntu-latest
+    outputs:
+      runjobs: ${{ steps.continue.outputs.runjobs }}
     steps:
-      - run: echo "Commit messages ${{ join(github.event.commits.*.message, ', ') }}. Skip ci? ${{ contains(join(github.event.commits.*.message, ' '), 'Skip CI') }}"
+      - id: continue
+        name: Determine if should continue
+        if: env.RUN_JOBS == 'true'
+        run: echo "::set-output name=runjobs::true"
+  check_release_due:
+    name: Check if the release is due today
+    needs: [prerequisites]
+    runs-on: ubuntu-latest
+    if: needs.prerequisites.outputs.runjobs
+    steps:
+      - id: check-release-due
+        name: Check Release Due
+        run: |
+          echo "true" > build/github/milestones/is-due-today
+          echo "::set-output name=is_due_today::$(cat build/github/milestones/is-due-today)"
+      - id: check-open-issues
+        name: Check Open Issues
+        if: steps.check-release-due.outputs.is_due_today
+        run: echo "Continuing"
