@@ -22,7 +22,7 @@ jobs:
           echo "::set-output name=is_due_today::$(cat build/github/milestones/is-due-today)"
       - id: check-open-issues
         name: Check Open Issues
-        if: steps.check-release-due.outputs.is_due_today
+        if: steps.check-release-due.outputs.is_due_today == 'true'
         run: |
           mkdir -p build/github/milestones
           echo "false" > build/github/milestones/is-open-issues
