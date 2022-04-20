@@ -7,6 +7,8 @@ on:
 
 env:
   RUN_JOBS: ${{ github.repository == 'rwinch/gha-quickstart' }}
+  IS_DUE: 'true'
+  IS_OPEN_ISSUES: 'true'
 
 jobs:
   release-next-version:
@@ -18,20 +20,20 @@ jobs:
         if: env.RUN_JOBS == 'true'
         run: |
           mkdir -p build/github/milestones
-          echo "false" > build/github/milestones/is-due-today
+          echo "${IS_DUE}" > build/github/milestones/is-due-today
           echo "::set-output name=is_due_today::$(cat build/github/milestones/is-due-today)"
       - id: debug
         run: echo "Is it due today? ${{ steps.check-release-due.outputs.is_due_today }}"
       - id: check-open-issues
         name: Check Open Issues
-        if: steps.check-release-due.outputs.is_due_today
+        if: steps.check-release-due.outputs.is_due_today == 'true'
         run: |
           mkdir -p build/github/milestones
-          echo "false" > build/github/milestones/is-open-issues
+          echo "${IS_OPEN_ISSUES}" > build/github/milestones/is-open-issues
           echo "::set-output name=is_open_issues::$(cat build/github/milestones/is-open-issues)"
       - id: release
         name: Initiate the Release
-        if: steps.check-open-issues.outputs.is_due_today
+        if: steps.check-open-issues.outputs.is_open_issues == 'false'
         run: echo "Releasing"
       - id: notify-result
         name: Notify the Result
