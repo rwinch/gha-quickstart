@@ -29,6 +29,7 @@ jobs:
           echo "::set-output name=is_open_issues::$(cat build/github/milestones/is-open-issues)"
       - id: release
         name: Initiate the Release
+        if: steps.check-open-issues.outputs.is_due_today
         run: echo "Releasing"
       - id: notify-result
         name: Notify the Result
