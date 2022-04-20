@@ -28,6 +28,7 @@ jobs:
       - id: check-release-due
         name: Check Release Due
         run: |
+          mkdir -p build/github/milestones
           echo "true" > build/github/milestones/is-due-today
           echo "::set-output name=is_due_today::$(cat build/github/milestones/is-due-today)"
       - id: check-open-issues
