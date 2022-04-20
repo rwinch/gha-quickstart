@@ -26,7 +26,7 @@ jobs:
         run: echo "Is it due today? ${{ steps.check-release-due.outputs.is_due_today }}"
       - id: check-open-issues
         name: Check Open Issues
-        if: steps.check-release-due.outputs.is_due_today == 'true'
+        if: steps.check-release-due.outputs.is_due_today
         run: |
           mkdir -p build/github/milestones
           echo "${IS_OPEN_ISSUES}" > build/github/milestones/is-open-issues
