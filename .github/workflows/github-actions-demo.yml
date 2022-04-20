@@ -8,7 +8,7 @@ on:
 env:
   RUN_JOBS: ${{ github.repository == 'rwinch/gha-quickstart' }}
   IS_DUE: 'true'
-  IS_OPEN_ISSUES: 'false'
+  IS_OPEN_ISSUES: 'true'
 
 jobs:
   release-next-version:
